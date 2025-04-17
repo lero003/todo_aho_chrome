@@ -1,0 +1,153 @@
+/***** base *****/
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 14px;
+  font-family: 'Roboto', sans-serif;
+  background: #0e0e0e radial-gradient(circle at 30% 30%, rgba(255,0,60,0.18), transparent 60%);
+  color: #fff;
+  width: 540px; height: 600px;
+  overflow: hidden;
+}
+
+/***** board layout *****/
+#board {
+  display: flex; gap: 12px;
+  height: 100%;
+  perspective: 600px;
+}
+
+/***** column card *****/
+.column {
+  flex: 1;
+  background: #111;
+  border: 3px solid #ff003c;
+  border-radius: 10px 2px 10px 2px;
+  padding: 12px 10px;
+  display: flex; flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transform: rotateX(2deg);
+  box-shadow: 0 0 14px rgba(255,0,60,0.55);
+}
+.column::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(-45deg,rgba(255,255,255,0.04) 0 8px,transparent 8px 16px);
+  pointer-events: none;
+}
+.column[data-status="todo"]  { border-color:#2979ff; box-shadow:0 0 14px rgba(41,121,255,0.55); }
+.column[data-status="doing"] { border-color:#00e676; box-shadow:0 0 14px rgba(0,230,118,0.55); }
+.column[data-status="done"]  { border-color:#ffea00; box-shadow:0 0 14px rgba(255,234,0,0.55); }
+
+.column h2 {
+  font-family: 'Bungee', cursive;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 0 0 8px;
+}
+
+.task-list {
+  flex: 1;
+  padding: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  overflow-y: auto;
+}
+
+/***** task card *****/
+.task {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 12px; margin: 6px 0;
+  background: #fff; color: #111; font-weight: 700;
+  border-radius: 6px 6px 6px 0;
+  cursor: grab;
+  transform-style: preserve-3d;
+  transition: transform .25s;
+}
+.task:hover   { transform: rotateY(6deg) scale(1.03); }
+.task:active  { cursor: grabbing; }
+.task span    { flex: 1; word-break: break-all; }
+.delete-task  {
+  border: none; background: none; color: #ff003c;
+  font-size: 1.3rem; cursor: pointer; line-height: 1;
+  transition: transform .2s;
+}
+.delete-task:hover { transform: scale(1.3); }
+
+/***** add button *****/
+.add-task {
+  margin-top: 8px; padding: 10px 0;
+  font-family: 'Bungee', cursive; font-size: .9rem;
+  background: #ff003c; color: #fff;
+  border: none; border-radius: 0 6px 0 6px;
+  cursor: pointer; position: relative; overflow: hidden;
+}
+.add-task::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg,transparent 0,rgba(255,255,255,0.3) 50%,transparent 100%);
+  transform: translateX(-100%); transition: transform .5s;
+}
+.add-task:hover::before { transform: translateX(100%); }
+
+/***** modal overlay *****/
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+.hidden { display: none; }
+
+#task-form {
+  width: 92%; max-width: 340px;
+  background: #0e0e0e; color: #fff;
+  border: 3px solid #ff003c; border-radius: 8px;
+  padding: 18px 16px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: 0 0 18px rgba(255,0,60,0.6);
+}
+#task-form h3 { font-family: 'Bungee', cursive; margin: 0 0 4px; }
+#task-form label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; }
+#task-form input, #task-form textarea {
+  padding: 6px 8px; font: inherit;
+  border: none; border-radius: 4px;
+}
+.modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+.modal-buttons button {
+  flex: 1; padding: 8px 0; font-family: 'Bungee', cursive; border: none; border-radius: 4px; cursor: pointer;
+}
+.modal-buttons .ok    { background: #00e676; color: #000; }
+.modal-buttons .cancel{ background: #ff1744; color: #fff; }
+
+
+/***** === Character Watermark Background === *****/
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:url('bg-hero.png') center/cover no-repeat;
+  opacity:0.4;                /* 濃さを調整 (0.05〜0.25 推奨) */
+  mix-blend-mode: screen;
+  pointer-events:none;         /* クリック貫通 */
+  z-index:0;
+}
+
+/* 既存 UI を前面に固定 */
+#board,
+.modal{ position:relative; z-index:1; }
+
+/* 列の背景を透過ブラックへ */
+.column{
+  background:rgba(0,0,0,0.65);   /* 元は #111 */
+  backdrop-filter:blur(4px);
+}
+
+/* モーダル */
+#task-form{
+  background:rgba(0,0,0,0.65);   /* 元は完全不透明 */
+  backdrop-filter:blur(4px);
+}
+.column::after {linear-gradient}
+.task:hover { box-shadow:0 0 12px #ff003c; }
+chrome.notifications
