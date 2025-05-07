@@ -2,20 +2,17 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>toreru – Persona Edition</title>
-
-  <!-- Google Fonts -->
+  <title>toreru – Persona Edition改</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="popup.css" />
+  <link rel="stylesheet" href="dragula.min.css" /> <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
   <div id="root">
     <div id="board">
       <div class="column" data-status="todo">
         <h2>TO&nbsp;DO</h2>
-        <div id="todo-list"  class="task-list"></div>
+        <div id="todo-list" class="task-list"></div>
         <button class="add-task" data-status="todo">追加</button>
       </div>
       <div class="column" data-status="doing">
@@ -25,22 +22,21 @@
       </div>
       <div class="column" data-status="done">
         <h2>COMPLETE</h2>
-        <div id="done-list"  class="task-list"></div>
-        <button class="add-task" data-status="done">追加</button>
-      </div>
+        <div id="done-list" class="task-list"></div>
+        </div>
     </div>
   </div>
 
-  <!-- ===== モーダル (hidden by default) ===== -->
   <div id="task-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <form id="task-form">
       <h3 id="modal-title">タスクを追加</h3>
+      <input type="hidden" id="task-id-edit" value="">
 
       <label>タイトル
         <input id="task-title" type="text" placeholder="例：企画書を書く" required />
       </label>
 
-      <label>期限
+      <label>期限日
         <input id="task-date" type="date" />
       </label>
 
@@ -49,12 +45,12 @@
       </label>
 
       <div class="modal-buttons">
-        <button type="submit"  class="ok">保存</button>
+        <button type="submit" class="ok">保存</button>
         <button type="button" class="cancel">キャンセル</button>
       </div>
     </form>
   </div>
 
-  <script src="popup.js"></script>
+  <script src="dragula.min.js"></script> <script src="popup.js"></script>
 </body>
 </html>
