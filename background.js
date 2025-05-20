@@ -70,5 +70,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ status: "No action taken for alarm, invalid task data."});
     }
     return true;
+  } else if (request.action === "updateBadge") {
+    const count = request.count || 0;
+    chrome.action.setBadgeText({ text: count > 0 ? String(count) : "" });
+    chrome.action.setBadgeBackgroundColor({ color: "#ff003c" });
+    sendResponse({ status: "badge updated" });
   }
 });

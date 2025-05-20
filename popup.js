@@ -5,6 +5,32 @@ let currentEditStatusContext = 'todo'; // モーダルを開くときのカラ�
 let editingTaskId = null; // 現在編集中のタスクID
 let drake = null; // Dragulaのインスタンス
 
+function updateStatsAndBadge() {
+  const total = (tasks.todo?.length || 0) + (tasks.doing?.length || 0) + (tasks.done?.length || 0);
+  const doneCount = tasks.done?.length || 0;
+  const percent = total > 0 ? Math.round(doneCount / total * 100) : 0;
+  const statsEl = document.getElementById('stats-summary');
+  if (statsEl) {
+    statsEl.textContent = `完了 ${doneCount}/${total} (${percent}%)`;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let dueCount = 0;
+  ['todo', 'doing'].forEach(status => {
+    tasks[status]?.forEach(t => {
+      if (t.due) {
+        const d = new Date(t.due);
+        d.setHours(0, 0, 0, 0);
+        if (d <= today) dueCount++;
+      }
+    });
+  });
+  if (chrome.runtime && chrome.runtime.sendMessage) {
+    chrome.runtime.sendMessage({ action: 'updateBadge', count: dueCount });
+  }
+}
+
 /***** 初期化処理 *****/
 document.addEventListener('DOMContentLoaded', () => {
   loadTasks(); // タスクを読み込んで表示
@@ -237,6 +263,8 @@ function renderTasks() {
         });
     }
   });
+
+  updateStatsAndBadge();
 }
 
 // 個々のタスク要素を生成してDOMに追加
