@@ -36,26 +36,28 @@ chrome.notifications.onClicked.addListener((notificationId) => {
 
 function manageAlarm(taskId, taskDueDateStr, taskTitle, taskStatus) {
   const alarmName = `task-reminder-${taskId}`;
-  if (taskStatus !== 'done' && taskDueDateStr) {
-    try {
-      // 期限日の午前9時にアラームを設定 (例)
-      const alarmDateTime = new Date(`${taskDueDateStr}T09:00:00`);
+  chrome.storage.sync.get({ notificationTime: "09:00" }, ({ notificationTime }) => {
+    if (taskStatus !== 'done' && taskDueDateStr) {
+      try {
+        // ユーザー設定の通知時刻を使用してアラームを設定
+        const alarmDateTime = new Date(`${taskDueDateStr}T${notificationTime}:00`);
 
-      if (alarmDateTime.getTime() > Date.now()) {
-        chrome.alarms.create(alarmName, { when: alarmDateTime.getTime() });
-        // console.log(`Alarm set/updated for ${taskTitle} on ${taskDueDateStr} at 09:00`);
-      } else {
-        chrome.alarms.clear(alarmName); // 過去の日付ならアラームは不要
-        // console.log(`Alarm cleared for ${taskTitle} (past due date)`);
+        if (alarmDateTime.getTime() > Date.now()) {
+          chrome.alarms.create(alarmName, { when: alarmDateTime.getTime() });
+          // console.log(`Alarm set/updated for ${taskTitle} on ${taskDueDateStr} at ${notificationTime}`);
+        } else {
+          chrome.alarms.clear(alarmName); // 過去の日付ならアラームは不要
+          // console.log(`Alarm cleared for ${taskTitle} (past due date)`);
+        }
+      } catch (e) {
+        console.error("Invalid date for alarm:", taskDueDateStr, e);
+        chrome.alarms.clear(alarmName);
       }
-    } catch (e) {
-      console.error("Invalid date for alarm:", taskDueDateStr, e);
+    } else {
       chrome.alarms.clear(alarmName);
+      // console.log(`Alarm cleared for ${taskTitle} (no due date or done)`);
     }
-  } else {
-    chrome.alarms.clear(alarmName);
-    // console.log(`Alarm cleared for ${taskTitle} (no due date or done)`);
-  }
+  });
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
