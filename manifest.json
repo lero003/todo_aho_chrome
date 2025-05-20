@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "toreru – Persona Edition",
-  "version": "1.3",
+  "version": "1.4",
   "description": "ネオン×コミック調のタスクボード (期限・詳細付き、改善版)",
   "action": {
     "default_popup": "popup.html",
